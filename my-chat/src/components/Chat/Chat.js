@@ -10,7 +10,7 @@ import './Chat.css';
 
 let socket;
 
-const Chat = ({ location }) => {
+const Chat = (props) => {
 
     const [name, setName] = useState('');
     const [users, setUsers] = useState('');
@@ -21,19 +21,22 @@ const Chat = ({ location }) => {
 
 
     useEffect(() => {
-        const { name } = queryString.parse(location.search);
+        const { name } = queryString.parse(props.location.search);
         setName(name);
 
         socket = io(ENDPOINT);
 
         socket.emit('join', { name }, (error) => {
-            console.log('joined');
             if (error) {
                 alert(error);
             }
         });
 
-    }, [ENDPOINT, location.search]);
+        return () => {
+            socket.emit('disconnect');
+        }
+
+    }, [ENDPOINT, props.location.search]);
 
     useEffect(() => {
 
@@ -41,15 +44,11 @@ const Chat = ({ location }) => {
             setUsers(users);
         });
 
+
         socket.on('message', (message) => {
             setMessages([...messages, message ]);
         });
 
-        return () => {
-            socket.emit('disconnect');
-      
-            socket.off();
-        }
     }, [messages])
 
     const sendMessage = (event) => {
@@ -60,13 +59,19 @@ const Chat = ({ location }) => {
         }
     }
 
+    const logout = (event) => {
+        event.preventDefault();
+
+        socket.emit('logout', '', () => props.history.push('/'));
+    }
+
     return (
         <div className="outerContainer">
             <div className="container">
                 <Messages messages={messages} name={name} />
                 <MessageInput message={message} setMessage={setMessage} sendMessage={sendMessage} />
             </div>
-            <InfoContainer users={users} />
+            <InfoContainer users={users} logout={logout} />
         </div>
     );
 }

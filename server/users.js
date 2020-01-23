@@ -6,7 +6,7 @@ const addUser = ({ id, name }) => {
   const existingUser = users.find((user) => user.name === name);
 
   if(!name) return { error: 'Username is required.' };
-  if(existingUser) return { error: 'Username is taken.' };
+  if(existingUser) return { error: 'Fix this later.' };
 
   const user = { id: id, name: name, active: true };
 
@@ -26,7 +26,7 @@ const deactivateUser = (id) => {
 
 const getUser = (id) => users.find((user) => user.id === id);
 
-const getAllUsers = () => { return users };
+const getAllUsers = () => {  return users };
 
 
 module.exports = { addUser, getUser, deactivateUser, getAllUsers };

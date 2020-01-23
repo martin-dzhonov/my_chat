@@ -37,14 +37,16 @@ io.on('connect', (socket) => {
     callback();
   });
 
-  socket.on('disconnect', () => {
+
+  socket.on('logout', (message, callback) => {
     const user = deactivateUser(socket.id);
     const allUsers = getAllUsers();
- 
     if(user) {
       io.to('chat').emit('message', { user: 'Admin', text: `${user.name} has gone offline.` });
       io.to('chat').emit('chatData', { users: allUsers });
     }
+
+    callback();
   })
 });
 

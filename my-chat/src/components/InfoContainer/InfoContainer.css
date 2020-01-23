@@ -26,3 +26,13 @@
     margin-bottom: 0px;
   }
   
+  .logoutButton {
+    color: #fff !important;
+    text-transform: uppercase;
+    text-decoration: none;
+    background: #2979FF;
+    padding: 20px;
+    display: inline-block;
+    border: none;
+    width: 100%;
+  }
