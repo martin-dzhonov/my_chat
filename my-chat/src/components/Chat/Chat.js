@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from "react";
-import Messages from '../Messages/Messages';
 import queryString from 'query-string';
+
+import Messages from '../Messages/Messages';
+import InfoContainer from '../InfoContainer/InfoContainer';
+
+import './Chat.css';
 
 const Chat = ({ location }) => {
 
     const [name, setName] = useState('');
     const [messages, setMessages] = useState([]);
+    const [users, setUsers] = useState('');
+
     const ENDPOINT = 'http://localhost:5000';
 
     useEffect(() => {
@@ -19,6 +25,7 @@ const Chat = ({ location }) => {
             <div className="container">
                 <Messages messages={messages} name={name} />
             </div>
+            <InfoContainer users={users}/>
         </div>
       );
 }
