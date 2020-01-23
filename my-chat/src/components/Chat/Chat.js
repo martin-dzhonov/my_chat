@@ -4,6 +4,7 @@ import io from "socket.io-client";
 
 import Messages from '../Messages/Messages';
 import InfoContainer from '../InfoContainer/InfoContainer';
+import MessageInput from '../MessageInput/MessageInput';
 
 import './Chat.css';
 
@@ -12,8 +13,9 @@ let socket;
 const Chat = ({ location }) => {
 
     const [name, setName] = useState('');
-    const [messages, setMessages] = useState([]);
     const [users, setUsers] = useState('');
+    const [message, setMessage] = useState('');
+    const [messages, setMessages] = useState([]);
 
     const ENDPOINT = 'http://localhost:5000';
 
@@ -25,33 +27,43 @@ const Chat = ({ location }) => {
         socket = io(ENDPOINT);
 
         socket.emit('join', { name }, (error) => {
-            if(error) {
-              alert(error);
+            if (error) {
+                alert(error);
             }
         });
 
-      }, [ENDPOINT, location.search]);
+    }, [ENDPOINT, location.search]);
 
-      useEffect(() => {
-    
+    useEffect(() => {
+
         socket.on('chatData', ({ users }) => {
-          setUsers(users);
+            setUsers(users);
         })
-    
+
         return () => {
-          socket.emit('disconnect');
-    
-          socket.off();
+            socket.emit('disconnect');
+
+            socket.off();
         }
-      }, [messages])
+    }, [messages])
+
+    const sendMessage = (event) => {
+        event.preventDefault();
+
+        if (message) {
+            socket.emit('sendMessage', message, () => setMessage(''));
+        }
+    }
+
     return (
         <div className="outerContainer">
             <div className="container">
                 <Messages messages={messages} name={name} />
+                <MessageInput message={message} setMessage={setMessage} sendMessage={sendMessage} />
             </div>
-            <InfoContainer users={users}/>
+            <InfoContainer users={users} />
         </div>
-      );
+    );
 }
 
 
