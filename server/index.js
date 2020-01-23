@@ -17,15 +17,14 @@ app.use(router);
 io.on('connect', (socket) => {
   socket.on('join', ({ name }, callback) => {
     const { error, user } = addUser({ id: socket.id, name });
+    const allUsers = getAllUsers();
 
     if(error) return callback(error);
-
-    socket.join(user.room);
 
     socket.emit('message', { user: 'admin', text: ` Welcome, ${user.name} !`});
     socket.emit('message', { user: 'admin', text: `${user.name} has joined the chat!` });
 
-    socket.emit('chatData', { getAllUsers() });
+    socket.emit('chatData', { users: allUsers });
 
     callback();
   });
@@ -40,10 +39,11 @@ io.on('connect', (socket) => {
 
   socket.on('disconnect', () => {
     const user = removeUser(socket.id);
+    const allUsers = getAllUsers();
 
     if(user) {
       socket.emit('message', { user: 'Admin', text: `${user.name} has left.` });
-      socket.emit('chatData', { getAllUsers() });
+      socket.emit('chatData', { users: allUsers });
     }
   })
 });
