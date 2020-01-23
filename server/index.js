@@ -30,9 +30,8 @@ io.on('connect', (socket) => {
     callback();
   });
 
-  socket.on('sendMessage', (message, callback) => {
-    const user = getUser(socket.id);
-    io.to('chat').emit('message', { user: user.name, text: message });
+  socket.on('sendMessage', (data, callback) => {
+    io.to('chat').emit('message', { user: data.user, text: data.message });
 
     callback();
   });

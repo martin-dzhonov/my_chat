@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import {useDispatch} from 'react-redux';
 import queryString from 'query-string';
 import io from "socket.io-client";
+import {toggle} from '../../utils/actions';
 
 import Messages from '../Messages/Messages';
 import InfoContainer from '../InfoContainer/InfoContainer';
@@ -16,9 +18,9 @@ const Chat = (props) => {
     const [users, setUsers] = useState('');
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
-
     const ENDPOINT = 'http://localhost:5000';
 
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const { name } = queryString.parse(props.location.search);
@@ -55,8 +57,13 @@ const Chat = (props) => {
         event.preventDefault();
 
         if (message) {
-            socket.emit('sendMessage', message, () => setMessage(''));
+            socket.emit('sendMessage', {user: name, message: message}, () => setMessage(''));
         }
+    }
+
+    const toggleOnline = (event) => {
+        event.preventDefault();
+        dispatch(toggle());
     }
 
     const logout = (event) => {
@@ -71,7 +78,7 @@ const Chat = (props) => {
                 <Messages messages={messages} name={name} />
                 <MessageInput message={message} setMessage={setMessage} sendMessage={sendMessage} />
             </div>
-            <InfoContainer users={users} logout={logout} />
+            <InfoContainer users={users} logout={logout} toggleOnline={toggleOnline} />
         </div>
     );
 }

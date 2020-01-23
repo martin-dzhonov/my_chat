@@ -6,18 +6,19 @@ const addUser = ({ id, name }) => {
   const existingUser = users.find((user) => user.name === name);
 
   if(!name) return { error: 'Username is required.' };
-  if(existingUser) return { error: 'Fix this later.' };
 
   const user = { id: id, name: name, active: true };
 
-  users.push(user);
+  if (!existingUser) { 
+    users.push(user);
+   };
 
   return { user };
 }
 
 const deactivateUser = (id) => {
   const index = users.findIndex((user) => user.id === id);
-  
+
   if(index !== -1) {
     users[index].active = false;
     return users[index];
