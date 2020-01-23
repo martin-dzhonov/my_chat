@@ -3,7 +3,7 @@ const express = require('express');
 const socketio = require('socket.io');
 const cors = require('cors');
 
-const { addUser, removeUser, getUser, getAllUsers } = require('./users');
+const { addUser, getUser, deactivateUser, getAllUsers } = require('./users');
 
 const router = require('./router');
 
@@ -16,7 +16,7 @@ app.use(router);
 
 io.on('connect', (socket) => {
   socket.on('join', ({ name }, callback) => {
-    const { error, user } = addUser({ id: socket.id, name });
+    const { error, user } = addUser({ id: socket.id, name: name });
     const allUsers = getAllUsers();
 
     if(error) return callback(error);
@@ -38,11 +38,11 @@ io.on('connect', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    const user = removeUser(socket.id);
+    const user = deactivateUser(socket.id);
     const allUsers = getAllUsers();
-
+ 
     if(user) {
-      io.to('chat').emit('message', { user: 'Admin', text: `${user.name} has left.` });
+      io.to('chat').emit('message', { user: 'Admin', text: `${user.name} has gone offline.` });
       io.to('chat').emit('chatData', { users: allUsers });
     }
   })
