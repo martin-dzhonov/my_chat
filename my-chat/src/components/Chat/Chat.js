@@ -27,6 +27,7 @@ const Chat = ({ location }) => {
         socket = io(ENDPOINT);
 
         socket.emit('join', { name }, (error) => {
+            console.log('joined');
             if (error) {
                 alert(error);
             }
@@ -38,11 +39,15 @@ const Chat = ({ location }) => {
 
         socket.on('chatData', ({ users }) => {
             setUsers(users);
-        })
+        });
+
+        socket.on('message', (message) => {
+            setMessages([...messages, message ]);
+        });
 
         return () => {
             socket.emit('disconnect');
-
+      
             socket.off();
         }
     }, [messages])

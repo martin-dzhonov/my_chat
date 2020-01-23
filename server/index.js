@@ -21,19 +21,18 @@ io.on('connect', (socket) => {
 
     if(error) return callback(error);
 
-    socket.emit('message', { user: 'admin', text: ` Welcome, ${user.name} !`});
-    socket.emit('message', { user: 'admin', text: `${user.name} has joined the chat!` });
+    socket.join('chat');
 
-    socket.emit('chatData', { users: allUsers });
+    socket.emit('message', { user: 'admin', text: ` Welcome, ${user.name} !`});
+    socket.broadcast.to('chat').emit('message', { user: 'admin', text: `${user.name} has joined!` });
+    io.to('chat').emit('chatData', { users: allUsers })
 
     callback();
   });
 
   socket.on('sendMessage', (message, callback) => {
-    console.log(socket.id);
     const user = getUser(socket.id);
-    console.log(user);
-    //socket.emit('message', { user: user.name, text: message });
+    io.to('chat').emit('message', { user: user.name, text: message });
 
     callback();
   });
@@ -43,8 +42,8 @@ io.on('connect', (socket) => {
     const allUsers = getAllUsers();
 
     if(user) {
-      socket.emit('message', { user: 'Admin', text: `${user.name} has left.` });
-      socket.emit('chatData', { users: allUsers });
+      io.to('chat').emit('message', { user: 'Admin', text: `${user.name} has left.` });
+      io.to('chat').emit('chatData', { users: allUsers });
     }
   })
 });
