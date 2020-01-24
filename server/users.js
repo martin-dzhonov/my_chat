@@ -5,11 +5,11 @@ const addUser = ({ id, name }) => {
 
   const existingUser = users.find((user) => user.name === name);
 
-  if(!name) return { error: 'Username is required.' };
+  if (!name) return { error: 'Username is required.' };
 
   const user = { id: id, name: name, active: true };
 
-  if (!existingUser) { 
+  if (!existingUser) {
     users.push(user);
    };
 
