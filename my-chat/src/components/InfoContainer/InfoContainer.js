@@ -16,25 +16,28 @@ return (
       users
         ? (
             <div>
-                <button className="logoutButton" onClick={e => logout(e)}>Logout</button>
-                
             <div>
-            <h1>Online: {sidebarVisible}</h1>
-            <input type="checkbox" onChange={e => toggleOnline(e)}></input>
-            {sidebarVisible ?<div className="activeContainer">
-              <h2>
+            <div className="onlineMessage">Online right now {sidebarVisible}</div>
+            <div className={sidebarVisible ? "toggleButton toggleVisible" : "toggleButton toggleHidden" } onClick={e => toggleOnline(e)}>
+                {sidebarVisible ? "Hide": "Show"}
+            </div>
+            {sidebarVisible ?
+            <div className="activeContainer">
+              <div>
                   {users
                   .filter(user => user.active === true)
                   .map((user, index) => (
                     <div key={index} className="activeItem">
-                      {user.name}
-                      <img alt="Online Icon" src={onlineIcon}/>
-                    </div>
+                       <img alt="Online Icon" src={onlineIcon}/>
+
+                      <div className="usernameContainer"> {user.name} </div>
+                      </div>
                   ))}
-              </h2>
-            </div>: ''}
-            
-          </div>
+              </div>
+            </div> : ''}
+            </div>
+            <button className="logoutButton" onClick={e => logout(e)}>Logout</button>
+
           </div>
         )
         : null

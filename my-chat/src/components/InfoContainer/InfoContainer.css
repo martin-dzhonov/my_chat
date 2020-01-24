@@ -1,16 +1,19 @@
 .textContainer {
     display: flex;
     flex-direction: column;
-    margin-left: 100px;
+    margin-left: 30px;
+    width:350px;
     color: white;
     height: 60%;
     justify-content: space-between;
+    position: relative;
   }
   
   .activeContainer {
     display: flex;
     align-items: center;
     margin-bottom: 50%;
+    font-size: 20px;
   }
   
   .activeItem {
@@ -30,9 +33,46 @@
     color: #fff !important;
     text-transform: uppercase;
     text-decoration: none;
-    background: #2979FF;
+    background: #c94f61;
+    font-size: 15px;
     padding: 20px;
     display: inline-block;
     border: none;
-    width: 100%;
+    width: 120px;
+    position: absolute;
+    bottom: 5px;
+    left:0px;
   }
+
+  .onlineMessage{
+      font-size: 1.5em;
+      width: 190px;
+      display: inline-block;
+      padding: 0px 0px 15px 0px;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+  }
+
+  .toggleButton{
+      width: 60px;
+      height: 100%;
+      font-size: 20px;
+      text-align: center;
+      display: inline-block;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none; 
+       user-select: none;   
+  }
+
+  .usernameContainer {
+     padding-left:10px;
+  }
+
+  .toggleVisible{
+      background: #c94f61;
+  }
+
+  .toggleHidden{
+    background: #2979FF;
+}
