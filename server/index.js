@@ -7,16 +7,14 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
-
-
-
-const { addUser, getUser, deactivateUser, getAllUsers } = require('./users');
+const { addUser, isLoggedIn, deactivateUser, getAllUsers} = require('./users');
 
 app.use(cors());
 app.use(router);
 
 io.on('connect', (socket) => {
   socket.on('join', ({ name }, callback) => {
+    const isActive = isLoggedIn(name);
     const { error, user } = addUser({ id: socket.id, name: name });
     const allUsers = getAllUsers();
 
@@ -25,8 +23,10 @@ io.on('connect', (socket) => {
     socket.join('chat');
 
     socket.emit('message', { user: 'Admin', text: ` Welcome, ${user.name} !`});
-    socket.broadcast.to('chat').emit('message', { user: 'Amin', text: `${user.name} has joined!` });
     io.to('chat').emit('chatData', { users: allUsers })
+    if(!isActive){
+      socket.broadcast.to('chat').emit('message', { user: 'Admin', text: `${user.name} has come online.` });
+    }
 
     callback();
   });
@@ -44,6 +44,7 @@ io.on('connect', (socket) => {
     if(user) {
       io.to('chat').emit('message', { user: 'Admin', text: `${user.name} has gone offline.` });
       io.to('chat').emit('chatData', { users: allUsers });
+      io.to('chat').emit('logout', { user: user });
     }
 
     callback();

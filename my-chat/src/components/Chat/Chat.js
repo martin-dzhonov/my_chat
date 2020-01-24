@@ -29,7 +29,6 @@ const Chat = (props) => {
         socket = io(ENDPOINT);
 
         socket.emit('join', { name }, (error) => {
-            console.log('join')
             if (error) {
                 alert(error);
             }
@@ -40,31 +39,35 @@ const Chat = (props) => {
     useEffect(() => {
 
         socket.on('chatData', ({ users }) => {
-            console.log('chatData');
             setUsers(users);
         });
 
-
         socket.on('message', (message) => {
-            console.log('message');
             setMessages([...messages, message]);
+        });
+
+        socket.on('logout', (data) => {
+            if(data.user.name === name) {
+                socket.off();
+                props.history.push('/');
+            }
         });
 
         return () => {
             socket.off();
         }
 
-    }, [messages])
+    }, [messages, name, props.history]);
 
     const sendMessage = (event) => {
         event.preventDefault();
 
         if (message) {
-            socket.emit('sendMessage', { user: name, message: message }, () => {console.log('send message'); setMessage('')});
+            socket.emit('sendMessage', { user: name, message: message }, () => {setMessage('')});
         }
     }
 
-    const toggleOnline = (event) => {
+    const toggleOnlineList = (event) => {
         event.preventDefault();
         dispatch(toggle());
     }
@@ -72,7 +75,7 @@ const Chat = (props) => {
     const logout = (event) => {
         event.preventDefault();
 
-        socket.emit('logout', { user: name }, () => {socket.off();props.history.push('/')});
+        socket.emit('logout', { user: name }, () => {});
     }
 
     return (
@@ -81,7 +84,7 @@ const Chat = (props) => {
                 <Messages messages={messages} name={name} />
                 <MessageInput message={message} setMessage={setMessage} sendMessage={sendMessage} />
             </div>
-            <InfoContainer users={users} logout={logout} toggleOnline={toggleOnline} />
+            <InfoContainer users={users} logout={logout} toggleOnline={toggleOnlineList} currentUser={name} />
         </div>
     );
 }

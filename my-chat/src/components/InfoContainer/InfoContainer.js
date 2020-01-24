@@ -1,14 +1,12 @@
 import React from 'react';
-
 import onlineIcon from '../../icons/onlineIcon.png';
-
 import './InfoContainer.css';
 import { useSelector } from 'react-redux';
 
-
-const InfoContainer = ({ users, logout, toggleOnline }) => {
+const InfoContainer = ({ users, logout, toggleOnline, currentUser }) => {
 
 const sidebarVisible = useSelector(state => state.sidebarVisible);
+const trimmedName = currentUser.trim().toLowerCase();
 
 return (
   <div className="textContainer">
@@ -30,7 +28,7 @@ return (
                     <div key={index} className="activeItem">
                        <img alt="Online Icon" src={onlineIcon}/>
 
-                      <div className="usernameContainer"> {user.name} </div>
+                      <div className="usernameContainer"> {user.name} {(user.name === trimmedName) ? " (You)" : ""}</div>
                       </div>
                   ))}
               </div>

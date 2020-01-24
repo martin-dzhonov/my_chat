@@ -30,9 +30,15 @@ const deactivateUser = (name) => {
   } 
 }
 
-const getUser = (id) => users.find((user) => user.id === id);
+const isLoggedIn = (name) => {
+  const existingUser = users.find((user) => user.name === name);
+  if(existingUser && existingUser.active){
+    return true;
+  }
+
+  return false;
+}
 
 const getAllUsers = () => {  return users };
 
-
-module.exports = { addUser, getUser, deactivateUser, getAllUsers };
+module.exports = { addUser, isLoggedIn, deactivateUser, getAllUsers };

@@ -59,6 +59,7 @@
       font-size: 20px;
       text-align: center;
       display: inline-block;
+      border-radius: 3px;
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none; 
