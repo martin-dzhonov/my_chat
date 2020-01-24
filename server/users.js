@@ -11,13 +11,18 @@ const addUser = ({ id, name }) => {
 
   if (!existingUser) {
     users.push(user);
-   };
+   } else {
+    const index = users.findIndex((user) => user.name === name);
+    if(index !== -1) {
+      users[index].active = true;
+    } 
+   }
 
   return { user };
 }
 
-const deactivateUser = (id) => {
-  const index = users.findIndex((user) => user.id === id);
+const deactivateUser = (name) => {
+  const index = users.findIndex((user) => user.name === name);
 
   if(index !== -1) {
     users[index].active = false;

@@ -24,8 +24,8 @@ io.on('connect', (socket) => {
 
     socket.join('chat');
 
-    socket.emit('message', { user: 'admin', text: ` Welcome, ${user.name} !`});
-    socket.broadcast.to('chat').emit('message', { user: 'admin', text: `${user.name} has joined!` });
+    socket.emit('message', { user: 'Admin', text: ` Welcome, ${user.name} !`});
+    socket.broadcast.to('chat').emit('message', { user: 'Amin', text: `${user.name} has joined!` });
     io.to('chat').emit('chatData', { users: allUsers })
 
     callback();
@@ -38,8 +38,8 @@ io.on('connect', (socket) => {
   });
 
 
-  socket.on('logout', (message, callback) => {
-    const user = deactivateUser(socket.id);
+  socket.on('logout', (data, callback) => {
+    const user = deactivateUser(data.user);
     const allUsers = getAllUsers();
     if(user) {
       io.to('chat').emit('message', { user: 'Admin', text: `${user.name} has gone offline.` });
